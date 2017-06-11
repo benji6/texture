@@ -1,28 +1,47 @@
-const xmlns = 'http://www.w3.org/2000/svg'
+const circlesCount = 256
 
-const svg = document.createElementNS(xmlns, 'svg')
-svg.setAttributeNS(null, 'viewBox', '0 0 1 1')
-svg.setAttributeNS(null, 'width', '100vmin')
-svg.setAttributeNS(null, 'height', '100vmin')
+const random = (min, max) => Math.random() * (max - min) + min
 
-const coords = `
-  M 0, 0
-  l 0, 1
-  l 1, 0
-  l 0, -1
-  l -1, 0
+const darkEllipses = Array.from({length: Math.round(circlesCount / 3)}, () => {
+  const cy = Math.random() ** 2
+  const rx = 0.1 * cy + 0.01
+  return {
+    cx: Math.random(),
+    cy,
+    fill: '#111',
+    rx,
+    ry: rx / 2,
+  }
+})
+
+const circles = Array.from({length: Math.round(circlesCount / 3 * 2)}, (_, i) => {
+  const r = 0.02 * i / circlesCount
+  return {
+    cx: random(r, 1 - r),
+    cy: random(r, 1 - r),
+    fill: '#333',
+    r,
+  }
+})
+
+const Svg = ({children}) => `
+ <svg height="100vmin" viewbox="0 0 1 1" width="100vmin">
+   ${children}
+ </svg>
 `
 
-const path = document.createElementNS(xmlns, 'path')
-path.setAttributeNS(null, 'stroke-linejoin', 'round')
-path.setAttributeNS(null, 'd', coords)
-path.setAttributeNS(null, 'fill', 'url(#gradient)')
-svg.appendChild(path)
+const Path = () => `
+ <path d="M 0 0 l 0 1 l 1 0 l 0 -1 l -1 0" fill="url(#gradient)" stroke-linejoin="round"/>
+`
 
-const circle = document.createElementNS(xmlns, 'circle')
-circle.setAttributeNS(null, 'cx', 0.5)
-circle.setAttributeNS(null, 'cy', 0.5)
-circle.setAttributeNS(null, 'r', 0.5)
-svg.appendChild(circle)
+const Circle = ({cx, cy, fill, r}) => `
+ <circle cx="${cx}" cy="${cy}" fill="${fill}" r="${r}"/>
+`
 
-document.body.appendChild(svg)
+const Ellipse = ({cx, cy, fill, rx, ry}) => `
+ <ellipse cx="${cx}" cy="${cy}" fill="${fill}" rx="${rx}" ry="${ry}"/>
+`
+
+document.body.innerHTML = Svg({
+  children: Path() + darkEllipses.map(Ellipse).join('') + circles.map(Circle).join(''),
+})
