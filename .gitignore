@@ -1,2 +1,3 @@
+.lein-repl-history
 *.log
-node_modules
+target
