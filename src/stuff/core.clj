@@ -16,10 +16,11 @@
 
 (defn Svg [{children :children}]
   (str
-    "<svg height=\"100vmin\" viewbox=\"0 0 1 1\" width=\"100vmin\">"
+    "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+    "<svg height=\"1px\" viewbox=\"0 0 1 1\" version=\"1.1\" width=\"1px\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">"
       children
     "</svg>"))
 
 (defn -main
   [& args]
-  (println (Svg {:children (apply str (map Ellipse dark-ellipses))})))
+  (spit "texture.svg" (Svg {:children (apply str (map Ellipse dark-ellipses))})))
